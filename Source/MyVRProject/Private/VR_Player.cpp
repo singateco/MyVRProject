@@ -9,6 +9,7 @@
 #include "Components/TextRenderComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "MoveComponent.h"
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
@@ -21,7 +22,8 @@ AVR_Player::AVR_Player()
 	RightGrip(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Right Grip"))),
 	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand"))),
 	LeftLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Left Log"))),
-	RightLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Right Log")))
+	RightLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Right Log"))),
+	MoveComp(CreateDefaultSubobject<UMoveComponent>(TEXT("Move Component")))
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -102,16 +104,19 @@ void AVR_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComponent->BindAction(RightIndexTrigger_Bool, ETriggerEvent::Started, this, &AVR_Player::RightTriggerInput_Bool);
-		EnhancedInputComponent->BindAction(RightIndexTrigger_Bool, ETriggerEvent::Completed, this, &AVR_Player::RightTriggerInput_Bool);
-		//EnhancedInputComponent->BindAction(RightIndexTrigger_Float, ETriggerEvent::Triggered, this, &AVR_Player::RightTriggerInput_Float);
-		//EnhancedInputComponent->BindAction(RightIndexTrigger_Float, ETriggerEvent::Completed, this, &AVR_Player::RightTriggerInput_Float);
-		EnhancedInputComponent->BindAction(RightIndexTrigger_Touch, ETriggerEvent::Started, this, &AVR_Player::RightTriggerInput_Touch);
-		EnhancedInputComponent->BindAction(RightIndexTrigger_Touch, ETriggerEvent::Completed, this, &AVR_Player::RightTriggerInput_Touch);
-
-		EnhancedInputComponent->BindAction(RightThumbStick, ETriggerEvent::Triggered, this, &AVR_Player::RightThumbStickInput);
-		EnhancedInputComponent->BindAction(RightThumbStick, ETriggerEvent::Completed, this, &AVR_Player::RightThumbStickInput);
-		EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &AVR_Player::MoveActionInput);
+		// EnhancedInputComponent->BindAction(RightIndexTrigger_Bool, ETriggerEvent::Started, this, &AVR_Player::RightTriggerInput_Bool);
+		// EnhancedInputComponent->BindAction(RightIndexTrigger_Bool, ETriggerEvent::Completed, this, &AVR_Player::RightTriggerInput_Bool);
+		// //EnhancedInputComponent->BindAction(RightIndexTrigger_Float, ETriggerEvent::Triggered, this, &AVR_Player::RightTriggerInput_Float);
+		// //EnhancedInputComponent->BindAction(RightIndexTrigger_Float, ETriggerEvent::Completed, this, &AVR_Player::RightTriggerInput_Float);
+		// EnhancedInputComponent->BindAction(RightIndexTrigger_Touch, ETriggerEvent::Started, this, &AVR_Player::RightTriggerInput_Touch);
+		// EnhancedInputComponent->BindAction(RightIndexTrigger_Touch, ETriggerEvent::Completed, this, &AVR_Player::RightTriggerInput_Touch);
+		//
+		// EnhancedInputComponent->BindAction(RightThumbStick, ETriggerEvent::Triggered, this, &AVR_Player::RightThumbStickInput);
+		// EnhancedInputComponent->BindAction(RightThumbStick, ETriggerEvent::Completed, this, &AVR_Player::RightThumbStickInput);
+		// EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &AVR_Player::MoveActionInput);
+		
+		// 컴포넌트에 입력 이벤트 넘겨주기
+		MoveComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
 	}
 }
 

@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "VR_Player.generated.h"
 
+class UMoveComponent;
 class UTextRenderComponent;
 class UMotionControllerComponent;
 class UCameraComponent;
@@ -64,7 +65,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class UInputAction* RightThumbStick;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
+	/*UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	UInputAction* RightIndexTrigger_Bool;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
@@ -75,6 +76,15 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	UInputAction* MoveInputAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
+	UInputAction* LeftIndexTrigger_Bool;*/
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
+	TArray<class UInputAction*> Ia_Inputs;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
+	UMoveComponent* MoveComp;
 
 
 private:
