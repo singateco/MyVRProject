@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "VR_Player.h"
@@ -69,7 +69,7 @@ void AVR_Player::BeginPlay()
 
 	FName TraceTag = TEXT("TraceDebug");
 
-	// Çìµå ¸¶¿îÆ® µð½ºÇÃ·¹ÀÌ ÀåºñÀÇ ±âÁØ À§Ä¡¸¦ ½ºÅ×ÀÌÁö·Î ¼³Á¤ÇÑ´Ù.
+	// í—¤ë“œ ë§ˆìš´íŠ¸ ë””ìŠ¤í”Œë ˆì´ ìž¥ë¹„ì˜ ê¸°ì¤€ ìœ„ì¹˜ë¥¼ ìŠ¤í…Œì´ì§€ë¡œ ì„¤ì •í•œë‹¤.
 	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Stage);
 
 	if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
@@ -115,7 +115,7 @@ void AVR_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		// EnhancedInputComponent->BindAction(RightThumbStick, ETriggerEvent::Completed, this, &AVR_Player::RightThumbStickInput);
 		// EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &AVR_Player::MoveActionInput);
 		
-		// ÄÄÆ÷³ÍÆ®¿¡ ÀÔ·Â ÀÌº¥Æ® ³Ñ°ÜÁÖ±â
+		// ì»´í¬ë„ŒíŠ¸ì— ìž…ë ¥ ì´ë²¤íŠ¸ ë„˜ê²¨ì£¼ê¸°
 		MoveComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
 	}
 }

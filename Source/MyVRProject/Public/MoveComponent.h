@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -30,7 +30,10 @@ public:
 	class AVR_Player* Player;
 
 	UPROPERTY(EditAnywhere, Category = "MySettings")
-	float LineSpeed {500};
+	float LineSpeed = 500;
+
+	UPROPERTY(EditAnywhere, Category = "MySettings")
+	float TeleportDelayTime = 1.f;
 
 private:
 	void ShowLine(const FInputActionValue& Value);

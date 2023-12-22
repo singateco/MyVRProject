@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "MoveComponent.h"
@@ -41,13 +41,13 @@ void UMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 void UMoveComponent::SetupPlayerInputComponent(UEnhancedInputComponent* EnhancedInputComponent,
 	TArray<UInputAction*> InputActions)
 {
-	// DrawTrajectory¸¦ ¹Ù·Î ¹ÙÀÎµù ÇÒ ¼ö ¾øÀ¸¹Ç·Î Áß°èÇÔ¼ö¸¦ »ç¿ëÇÑ´Ù
+	// DrawTrajectoryë¥¼ ë°”ë¡œ ë°”ì¸ë”© í•  ìˆ˜ ì—†ìœ¼ë¯€ë¡œ ì¤‘ê³„í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•œë‹¤
 	EnhancedInputComponent->BindAction(InputActions[0], ETriggerEvent::Triggered, this, &UMoveComponent::ShowLine);
-	// Æ®¸®°Å¿¡¼­ ¼ÕÀ» ³õ¾ÒÀ»½Ã ¼ø°£ÀÌµ¿
+	// íŠ¸ë¦¬ê±°ì—ì„œ ì†ì„ ë†“ì•˜ì„ì‹œ ìˆœê°„ì´ë™
 	EnhancedInputComponent->BindAction(InputActions[0], ETriggerEvent::Completed, this, &UMoveComponent::Teleport);
 }
 
-// ¿¹Ãø¼± º¸ÀÌ°Ô ÇÏ´Â ÇÔ¼ö
+// ì˜ˆì¸¡ì„  ë³´ì´ê²Œ í•˜ëŠ” í•¨ìˆ˜
 void UMoveComponent::ShowLine(const FInputActionValue& Value)
 {
 	bool bIsPressed = Value.Get<bool>();
@@ -61,13 +61,13 @@ void UMoveComponent::ShowLine(const FInputActionValue& Value)
 	}
 }
 
-// ¿¹Ãø ¼±À» °è»êÇÏ°í ±×¸®´Â ÇÔ¼ö (Áß·Â ¹æ½Ä)
+// ì˜ˆì¸¡ ì„ ì„ ê³„ì‚°í•˜ê³  ê·¸ë¦¬ëŠ” í•¨ìˆ˜ (ì¤‘ë ¥ ë°©ì‹)
 void UMoveComponent::DrawTrajectory(const FVector& StartLoc, const FVector& Direction, const float Speed, const int32 Segment, const float Interval)
 {
-	// Direction ¹æÇâÀ¸·Î Segment È¸¸¸Å­ Interval °£°İ (ÃÊ)·Î ¹İº¹ÇØ¼­ ÀÌµ¿ÇßÀ» À§Ä¡¸¦ °è»êÇÑ´Ù.
-	// °è»ê °á°ú °ªµéÀº ¹è¿­¿¡ ´ã¾Æ³õ´Â´Ù.
+	// Direction ë°©í–¥ìœ¼ë¡œ Segment íšŒë§Œí¼ Interval ê°„ê²© (ì´ˆ)ë¡œ ë°˜ë³µí•´ì„œ ì´ë™í–ˆì„ ìœ„ì¹˜ë¥¼ ê³„ì‚°í•œë‹¤.
+	// ê³„ì‚° ê²°ê³¼ ê°’ë“¤ì€ ë°°ì—´ì— ë‹´ì•„ë†“ëŠ”ë‹¤.
 
-	// °ªÀ» ´ã¾Æ³õÀ» ¹è¿­.
+	// ê°’ì„ ë‹´ì•„ë†“ì„ ë°°ì—´.
 	TArray<FVector> LinePositions;
 
 	for (int32 i = 0; i < Segment; i++)
@@ -76,14 +76,14 @@ void UMoveComponent::DrawTrajectory(const FVector& StartLoc, const FVector& Dire
 
 		FVector GravityVec = FVector(0, 0, GetWorld()->GetGravityZ());
 
-		// ÀÚÀ¯³«ÇÏ½Ä 1/2gt^2 ¶ó°í ÇÔ (»ó¾÷°è¶ó Àß ¸ğ¸§)
+		// ììœ ë‚™í•˜ì‹ 1/2gt^2 ë¼ê³  í•¨ (ìƒì—…ê³„ë¼ ì˜ ëª¨ë¦„)
 		FVector NewLocation = StartLoc + Direction * Speed * ElapsedTime + (0.5f * GravityVec * ElapsedTime * ElapsedTime);
 
-		// ¹º°¡¿¡ ºÎµúÇûÀ»½Ã ¹è¿­¿¡ ±×¸¸ Ãß°¡ÇÔ
+		// ë­”ê°€ì— ë¶€ë”ªí˜”ì„ì‹œ ë°°ì—´ì— ê·¸ë§Œ ì¶”ê°€í•¨
 		FHitResult HitResult;
 		if (LinePositions.Num() > 0 && GetWorld()->LineTraceSingleByChannel(HitResult, LinePositions[i - 1], NewLocation, ECC_Visibility))
 		{
-			// ¸¶Áö¸· Á¡À» ºÎµúÈù ºÎºĞÀ¸·Î ÇÔ
+			// ë§ˆì§€ë§‰ ì ì„ ë¶€ë”ªíŒ ë¶€ë¶„ìœ¼ë¡œ í•¨
 			LinePositions.Add(HitResult.ImpactPoint);
 			break;
 		}
@@ -96,18 +96,28 @@ void UMoveComponent::DrawTrajectory(const FVector& StartLoc, const FVector& Dire
 		DrawDebugLine(GetWorld(), LinePositions[i], LinePositions[i + 1], FColor::Green, false, 0, 0, 2.f);
 	}
 
-	// ¸¶Áö¸· À§Ä¡¿¡ »¡°­ »óÀÚ¸¦ Ç¥½ÃÇÑ´Ù.
+	// ë§ˆì§€ë§‰ ìœ„ì¹˜ì— ë¹¨ê°• ìƒìë¥¼ í‘œì‹œí•œë‹¤.
 	DrawDebugBox(GetWorld(), LinePositions.Last(), FVector(5), FColor::Red, false, 0, 0, 0.5f);
 
-	// ÀÌµ¿ÇÒ °÷À» ÀúÀå
+	// ì´ë™í•  ê³³ì„ ì €ì¥
 	TargetLocation = LinePositions.Last();
 }
 
-// ¸ñÇ¥ ÁöÁ¤À¸·Î ¼ø°£ÀÌµ¿ÇÏ´Â ÇÔ¼ö
+// ëª©í‘œ ì§€ì •ìœ¼ë¡œ ìˆœê°„ì´ë™í•˜ëŠ” í•¨ìˆ˜
 void UMoveComponent::Teleport()
 {
+	// Black Fade In íš¨ê³¼ë¥¼ ì¤€ë‹¤.
+	Player->GetController<APlayerController>()->PlayerCameraManager->StartCameraFade(0, 1.f, TeleportDelayTime, FLinearColor::Black);
+
+	// TeleportDelayTime ì‹œì´ ì§€ë‚œí›„ í…”ë ˆí¬íŠ¸í•œë‹¤.
 	if (!TargetLocation.IsNearlyZero())
 	{
-		Player->SetActorLocation(TargetLocation + FVector(0, 0, Player->GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
+		FTimerHandle TeleportTimer;
+
+		GetWorld()->GetTimerManager().SetTimer(TeleportTimer, FTimerDelegate::CreateLambda([&]()
+			{
+				Player->SetActorLocation(TargetLocation + FVector(0, 0, Player->GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
+			}), TeleportDelayTime, false);
 	}
+
 }

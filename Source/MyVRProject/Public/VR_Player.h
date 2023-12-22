@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -31,22 +31,22 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// Ä«¸Ş¶ó
+	// ì¹´ë©”ë¼
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	UCameraComponent* CameraComponent;
 
-	// Ä«¸Ş¶ó ¸Ş½Ã
+	// ì¹´ë©”ë¼ ë©”ì‹œ
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	UStaticMeshComponent* HMDMesh;
 
-	// ¿ŞÂÊ ¼Õ
+	// ì™¼ìª½ ì†
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	UMotionControllerComponent* LeftGrip;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	USkeletalMeshComponent* LeftHandMesh;
 
-	// ¿À¸¥ÂÊ ¼Õ
+	// ì˜¤ë¥¸ìª½ ì†
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	UMotionControllerComponent* RightGrip;
 
