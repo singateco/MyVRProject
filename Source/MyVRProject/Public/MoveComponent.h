@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -38,6 +38,7 @@ public:
 private:
 	void ShowLine(const FInputActionValue& Value);
 	void DrawTrajectory(const FVector& StartLoc, const FVector& Direction, const float Speed, const int32 Segment, const float Interval);
+	void DrawTrajectoryBezier(const FVector& StartLoc, const FVector& Direction, const int32 Segment, const int32 Length);
 	void Teleport();
 
 	FVector TargetLocation;

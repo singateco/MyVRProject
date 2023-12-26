@@ -1,9 +1,10 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "MoveComponent.h"
 #include "EnhancedInputComponent.h"
 #include "MotionControllerComponent.h"
+#include "VRDrawFunctionLibrary.h"
 #include "VR_Player.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -54,10 +55,12 @@ void UMoveComponent::ShowLine(const FInputActionValue& Value)
 
 	Player->LeftLog->SetText(FText::FromString(FString::Printf(TEXT("%s"), bIsPressed ? *FString("Pressed") : *FString("Released"))));
 
+	DrawDebugLine(GetWorld(), Player->LeftHandMesh->GetComponentLocation(), Player->LeftHandMesh->GetComponentLocation() + Player->LeftHandMesh->GetRightVector() * 5000, FColor::Blue, false, 0, 0, .5f);
+
 	if (nullptr != Player && bIsPressed)
 	{
-		DrawTrajectory(Player->LeftHandMesh->GetComponentLocation(), Player->LeftHandMesh->GetForwardVector() * -1 + Player->LeftHandMesh->GetRightVector(), LineSpeed, 50, 0.1f);
-			
+		//DrawTrajectory(Player->LeftHandMesh->GetComponentLocation(), Player->LeftHandMesh->GetForwardVector() * -1 + Player->LeftHandMesh->GetRightVector(), LineSpeed, 50, 0.1f);
+		DrawTrajectoryBezier(Player->LeftHandMesh->GetComponentLocation(), Player->LeftHandMesh->GetRightVector(), 50, 5000);
 	}
 }
 
@@ -101,6 +104,32 @@ void UMoveComponent::DrawTrajectory(const FVector& StartLoc, const FVector& Dire
 
 	// 이동할 곳을 저장
 	TargetLocation = LinePositions.Last();
+}
+
+void UMoveComponent::DrawTrajectoryBezier(const FVector& StartLoc, const FVector& Direction, const int32 Segment, const int32 Length)
+{
+	FHitResult HitResult;
+	FVector EndLoc;
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, StartLoc + Direction * Length, ECC_Visibility))
+	{
+		EndLoc = HitResult.ImpactPoint;
+	}
+
+	if (!EndLoc.IsNearlyZero())
+	{
+		FVector P1 = FMath::Lerp(StartLoc, EndLoc, 0.5);
+		P1.Z *= 5;
+
+		DrawDebugPoint(GetWorld(), P1, 20, FColor::Purple);
+		
+		TArray<FVector> DrawPoints = UVRDrawFunctionLibrary::CalculateBezierCurve(StartLoc, P1, EndLoc, 50);
+
+		for (int i = 0; i < DrawPoints.Num() - 1; i++)
+		{
+			DrawDebugLine(GetWorld(), DrawPoints[i], DrawPoints[i + 1], FColor::Red, false, 0, 0, 2);
+		}
+	}
+		
 }
 
 // 목표 지정으로 순간이동하는 함수
