@@ -4,10 +4,14 @@
 #include "MoveComponent.h"
 #include "EnhancedInputComponent.h"
 #include "MotionControllerComponent.h"
+#include "NiagaraComponent.h"
 #include "VRDrawFunctionLibrary.h"
 #include "VR_Player.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "NiagaraDataInterfaceArrayFunctionLibrary.h"
+#include "TeleportRingActor.h"
+
 
 // Sets default values for this component's properties
 UMoveComponent::UMoveComponent()
@@ -24,10 +28,22 @@ UMoveComponent::UMoveComponent()
 void UMoveComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	// ...
+
 	UE_LOG(LogTemp, Warning, TEXT("Component Begin Play"))
 	Player = GetOwner<AVR_Player>();
+
+	Player->TeleportFX->SetVisibility(false);
+
+	// 텔레포트 링 이펙트 액터를 생성.
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	TeleportRingInst = GetWorld()->SpawnActor<ATeleportRingActor>(TeleportRingBP, Params);
+
+	if (TeleportRingInst)
+	{
+		// 눈에 보이지 않게 처리
+		TeleportRingInst->RingFX->SetVisibility(false);
+	}
 }
 
 
@@ -55,12 +71,15 @@ void UMoveComponent::ShowLine(const FInputActionValue& Value)
 
 	Player->LeftLog->SetText(FText::FromString(FString::Printf(TEXT("%s"), bIsPressed ? *FString("Pressed") : *FString("Released"))));
 
-	DrawDebugLine(GetWorld(), Player->LeftHandMesh->GetComponentLocation(), Player->LeftHandMesh->GetComponentLocation() + Player->LeftHandMesh->GetRightVector() * 5000, FColor::Blue, false, 0, 0, .5f);
+	//DrawDebugLine(GetWorld(), Player->LeftHandMesh->GetComponentLocation(), Player->LeftHandMesh->GetComponentLocation() + Player->LeftHandMesh->GetRightVector() * 5000, FColor::Blue, false, 0, 0, .5f);
 
 	if (nullptr != Player && bIsPressed)
 	{
-		//DrawTrajectory(Player->LeftHandMesh->GetComponentLocation(), Player->LeftHandMesh->GetForwardVector() * -1 + Player->LeftHandMesh->GetRightVector(), LineSpeed, 50, 0.1f);
-		DrawTrajectoryBezier(Player->LeftHandMesh->GetComponentLocation(), Player->LeftHandMesh->GetRightVector(), 50, 5000);
+		// 중력 가속도를 사용하는 방식
+		DrawTrajectory(Player->LeftHandMesh->GetComponentLocation(), Player->LeftHandMesh->GetForwardVector() * -1 + Player->LeftHandMesh->GetRightVector(), LineSpeed, 50, 0.1f);
+
+		// 베지어 곡선을 사용하는 방식
+		//DrawTrajectoryBezier(Player->LeftHandMesh->GetComponentLocation(), Player->LeftHandMesh->GetRightVector(), 50, 5000);
 	}
 }
 
@@ -94,16 +113,28 @@ void UMoveComponent::DrawTrajectory(const FVector& StartLoc, const FVector& Dire
 		LinePositions.Add(NewLocation);
 	}
 
-	for (int32 i = 0; i < LinePositions.Num() -1; i++)
-	{
-		DrawDebugLine(GetWorld(), LinePositions[i], LinePositions[i + 1], FColor::Green, false, 0, 0, 2.f);
-	}
+	// 디버그로 그리기
+	//for (int32 i = 0; i < LinePositions.Num() -1; i++)
+	//{
+		//DrawDebugLine(GetWorld(), LinePositions[i], LinePositions[i + 1], FColor::Green, false, 0, 0, 2.f);
+	//}
 
-	// 마지막 위치에 빨강 상자를 표시한다.
-	DrawDebugBox(GetWorld(), LinePositions.Last(), FVector(5), FColor::Red, false, 0, 0, 0.5f);
+	Player->TeleportFX->SetVisibility(true);
+	// 나이아가라 시스템으로 그리기
+	UNiagaraDataInterfaceArrayFunctionLibrary::SetNiagaraArrayVector(Player->TeleportFX, FName("PointArray"), LinePositions);
+
+	// 마지막 위치에 빨강 상자를 표시한다. (디버그용)
+	//DrawDebugBox(GetWorld(), LinePositions.Last(), FVector(5), FColor::Red, false, 0, 0, 0.5f);
 
 	// 이동할 곳을 저장
 	TargetLocation = LinePositions.Last();
+
+	// 이펙트 표시하기
+	if (TeleportRingInst)
+	{
+		TeleportRingInst->SetActorLocation(TargetLocation);
+		TeleportRingInst->RingFX->SetVisibility(true);
+	}
 }
 
 void UMoveComponent::DrawTrajectoryBezier(const FVector& StartLoc, const FVector& Direction, const int32 Segment, const int32 Length)
@@ -147,6 +178,23 @@ void UMoveComponent::Teleport()
 			{
 				Player->SetActorLocation(TargetLocation + FVector(0, 0, Player->GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
 			}), TeleportDelayTime, false);
+	}
+
+	// 라인 이펙트 숨기기
+	if (Player->TeleportFX)
+	{
+		// 값 초기화 하기 (필요한가?)
+		//const TArray<FVector> ResetVec { FVector::ZeroVector, FVector::ZeroVector };
+		//UNiagaraDataInterfaceArrayFunctionLibrary::SetNiagaraArrayVector(Player->TeleportFX, FName("PointArray"), ResetVec);
+
+		// 그냥 숨겨도 됨
+		Player->TeleportFX->SetVisibility(false);
+	}
+
+	// 링 숨기기
+	if (TeleportRingInst)
+	{
+		TeleportRingInst->RingFX->SetVisibility(false);
 	}
 
 }

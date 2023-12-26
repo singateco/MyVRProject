@@ -35,6 +35,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = "MySettings")
 	float TeleportDelayTime = 1.f;
 
+	UPROPERTY(EditAnywhere, Category = "MySettings")
+	TSubclassOf<class ATeleportRingActor> TeleportRingBP;
+
+	UPROPERTY()
+	ATeleportRingActor* TeleportRingInst;
+
 private:
 	void ShowLine(const FInputActionValue& Value);
 	void DrawTrajectory(const FVector& StartLoc, const FVector& Direction, const float Speed, const int32 Segment, const float Interval);
@@ -42,4 +48,5 @@ private:
 	void Teleport();
 
 	FVector TargetLocation;
+
 };

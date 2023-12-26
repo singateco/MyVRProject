@@ -8,7 +8,7 @@ public class MyVRProject : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "EnhancedInput", "HeadMountedDisplay", "XRBase" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "EnhancedInput", "HeadMountedDisplay", "XRBase", "Niagara" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

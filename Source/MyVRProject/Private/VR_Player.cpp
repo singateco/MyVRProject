@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "VR_Player.h"
@@ -10,6 +10,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "MoveComponent.h"
+#include "NiagaraComponent.h" 
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
@@ -23,7 +24,8 @@ AVR_Player::AVR_Player()
 	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand"))),
 	LeftLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Left Log"))),
 	RightLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Right Log"))),
-	MoveComp(CreateDefaultSubobject<UMoveComponent>(TEXT("Move Component")))
+	MoveComp(CreateDefaultSubobject<UMoveComponent>(TEXT("Move Component"))),
+	TeleportFX(CreateDefaultSubobject<UNiagaraComponent>(TEXT("Teleport FX")))
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -60,6 +62,8 @@ AVR_Player::AVR_Player()
 	RightLog->SetVerticalAlignment(EVRTA_TextCenter);
 	RightLog->SetWorldSize(16);
 	RightLog->SetTextRenderColor(FColor(255, 0, 255));
+
+	TeleportFX->SetupAttachment(LeftGrip);
 }
 
 // Called when the game starts or when spawned
