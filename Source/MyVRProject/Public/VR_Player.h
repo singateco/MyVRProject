@@ -87,6 +87,9 @@ public:
 	UMoveComponent* MoveComp;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
+	class UGrabComponent* GrabComp;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class UNiagaraComponent* TeleportFX;
 
 

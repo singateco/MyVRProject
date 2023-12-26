@@ -31,6 +31,17 @@ APickUpActor::APickUpActor()
 	MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void APickUpActor::Grabbed(USkeletalMeshComponent* HandMesh)
+{
+	// 부착되기전 물리 끄기
+	BoxComponent->SetEnableGravity(false);
+	BoxComponent->SetSimulatePhysics(false);
+
+	// 잡혔을 때의 핸드 메시에 부착된다.
+	const FAttachmentTransformRules AttachmentRules {FAttachmentTransformRules::KeepWorldTransform};
+	this->AttachToComponent(HandMesh, AttachmentRules);
+}
+
 // Called when the game starts or when spawned
 void APickUpActor::BeginPlay()
 {

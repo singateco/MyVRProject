@@ -9,6 +9,7 @@
 #include "Components/TextRenderComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "GrabComponent.h"
 #include "MoveComponent.h"
 #include "NiagaraComponent.h" 
 #include "Components/CapsuleComponent.h"
@@ -25,6 +26,7 @@ AVR_Player::AVR_Player()
 	LeftLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Left Log"))),
 	RightLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Right Log"))),
 	MoveComp(CreateDefaultSubobject<UMoveComponent>(TEXT("Move Component"))),
+	GrabComp(CreateDefaultSubobject<UGrabComponent>(TEXT("Grab Component"))),
 	TeleportFX(CreateDefaultSubobject<UNiagaraComponent>(TEXT("Teleport FX")))
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -121,6 +123,7 @@ void AVR_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		
 		// 컴포넌트에 입력 이벤트 넘겨주기
 		MoveComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
+		GrabComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
 	}
 }
 

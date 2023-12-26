@@ -25,6 +25,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "MySettings|Component")
 	UStaticMeshComponent* MeshComponent;
 
+	void Grabbed(class USkeletalMeshComponent* HandMesh);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
