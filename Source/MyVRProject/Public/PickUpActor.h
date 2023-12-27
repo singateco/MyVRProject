@@ -25,7 +25,18 @@ public:
 	UPROPERTY(EditAnywhere, Category = "MySettings|Component")
 	UStaticMeshComponent* MeshComponent;
 
-	void Grabbed(class USkeletalMeshComponent* HandMesh);
+	UPROPERTY(EditAnywhere, Category = "MySettings|Values")
+	FVector LocationOffset = FVector(0, 0, 10);
+
+	UPROPERTY(EditAnywhere, Category = "MySettings|Values")
+	float ThrowPower { 500 };
+
+	UPROPERTY(EditAnywhere, Category = "MySettings|Values")
+	float RotPower { 50 };
+
+	void Grabbed(class USkeletalMeshComponent* HandMesh, EAttachmentRule AttachmentRules);
+
+	void Released(FVector DeltaPosition, FQuat DeltaRotation);
 
 protected:
 	// Called when the game starts or when spawned
