@@ -148,7 +148,7 @@ void UGrabComponent::GrabObject()
 	}
 
 	// 디버깅용 스피어 그리기
-	DrawDebugSphere(World, Player->RightGrip->GetComponentLocation(), SphereRadius, 30, FColor::Green, false, 1, 0, 1.f);
+	//DrawDebugSphere(World, Player->RightGrip->GetComponentLocation(), SphereRadius, 30, FColor::Green, false, 1, 0, 1.f);
 
 #pragma endregion
 

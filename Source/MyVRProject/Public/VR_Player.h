@@ -89,6 +89,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class UGrabComponent* GrabComp;
 
+	// 애니메이션 담당 컴포넌트
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
+	class UVRHandAnimComponent* HandAnimComp;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class UNiagaraComponent* TeleportFX;
 
