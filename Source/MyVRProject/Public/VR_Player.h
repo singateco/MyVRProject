@@ -96,6 +96,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class UNiagaraComponent* TeleportFX;
 
+	UPROPERTY()
+	class UVRBodyAnimInstance* BodyAnim;
 
 private:
 

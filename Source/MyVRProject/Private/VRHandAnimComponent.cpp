@@ -67,9 +67,12 @@ void UVRHandAnimComponent::SetupPlayerInputComponent(UEnhancedInputComponent* En
 
 	// 왼쪽 엄지 터치
 	EnhancedInputComponent->BindAction(InputActions[4], ETriggerEvent::Triggered, this, &UVRHandAnimComponent::InputThumbStickTouch_Left);
+	EnhancedInputComponent->BindAction(InputActions[4], ETriggerEvent::Completed, this, &UVRHandAnimComponent::InputThumbStickTouch_Left);
+
 
 	// 왼쪽 검지 트리거 터치
 	EnhancedInputComponent->BindAction(InputActions[5], ETriggerEvent::Triggered, this, &UVRHandAnimComponent::InputIndexTriggerTouch_Left);
+	EnhancedInputComponent->BindAction(InputActions[5], ETriggerEvent::Completed, this, &UVRHandAnimComponent::InputIndexTriggerTouch_Left);
 
 	// 오른쪽 검지 트리거 누르는 값
 	EnhancedInputComponent->BindAction(InputActions[6], ETriggerEvent::Triggered, this, &UVRHandAnimComponent::InputIndexTriggerValue_Right);
@@ -81,9 +84,11 @@ void UVRHandAnimComponent::SetupPlayerInputComponent(UEnhancedInputComponent* En
 
 	// 오른쪽 엄지 터치
 	EnhancedInputComponent->BindAction(InputActions[8], ETriggerEvent::Triggered, this, &UVRHandAnimComponent::InputThumbStickTouch_Right);
+	EnhancedInputComponent->BindAction(InputActions[8], ETriggerEvent::Completed, this, &UVRHandAnimComponent::InputThumbStickTouch_Right);
 
 	// 오른쪽 검지 트리거 터치
 	EnhancedInputComponent->BindAction(InputActions[9], ETriggerEvent::Triggered, this, &UVRHandAnimComponent::InputIndexTriggerTouch_Right);
+	EnhancedInputComponent->BindAction(InputActions[9], ETriggerEvent::Completed, this, &UVRHandAnimComponent::InputIndexTriggerTouch_Right);
 }
 
 void UVRHandAnimComponent::InputIndexTriggerValue_Left(const FInputActionValue& Value)
@@ -106,7 +111,7 @@ void UVRHandAnimComponent::InputIndexTriggerTouch_Left(const FInputActionValue& 
 {
 	if (nullptr != HandAnim_Left)
 	{
-		HandAnim_Left->PoseAlphaPoint_cpp = Value.Get<bool>();
+		HandAnim_Left->PoseAlphaPoint_cpp = Value.Get<bool>() == true ? 0 : 1.0f;
 	}
 }
 
@@ -114,7 +119,8 @@ void UVRHandAnimComponent::InputThumbStickTouch_Left(const FInputActionValue& Va
 {
 	if (nullptr != HandAnim_Left)
 	{
-		HandAnim_Left->PoseAlphaThumbUp_cpp = Value.Get<bool>();
+		HandAnim_Left->PoseAlphaThumbUp_cpp = Value.Get<bool>() == true ? 0 : 1.0f;
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, FString::Printf(TEXT("%s"), Value.Get<bool>() ? *FString(TEXT("True")) : *FString(TEXT("False"))));
 	}
 }
 
@@ -138,7 +144,7 @@ void UVRHandAnimComponent::InputIndexTriggerTouch_Right(const FInputActionValue&
 {
 	if (nullptr != HandAnim_Right)
 	{
-		HandAnim_Right->PoseAlphaPoint_cpp = Value.Get<bool>();
+		HandAnim_Right->PoseAlphaPoint_cpp = Value.Get<bool>() == true ? 0 : 1.0f;
 	}
 }
 
@@ -146,7 +152,7 @@ void UVRHandAnimComponent::InputThumbStickTouch_Right(const FInputActionValue& V
 {
 	if (nullptr != HandAnim_Right)
 	{
-		HandAnim_Right->PoseAlphaThumbUp_cpp = Value.Get<bool>();
+		HandAnim_Right->PoseAlphaThumbUp_cpp = Value.Get<bool>() == true ? 0 : 1.0f;
 	}
 }
 

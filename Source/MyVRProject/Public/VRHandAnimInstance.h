@@ -15,6 +15,8 @@ class MYVRPROJECT_API UVRHandAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 
 public:
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= MySettings)
 	float PoseAlphaGrasp_cpp;
 
@@ -28,10 +30,10 @@ public:
 	float PoseAlphaThumbUp_cpp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MySettings)
-	float CurrentPoseAlphaThumbUp_cpp;
+	float CurrentPoseAlphaThumbUp_cpp = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MySettings)
-	float CurrentPoseAlphaPoint_cpp;
+	float CurrentPoseAlphaPoint_cpp = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MySettings)
 	bool bMirror_cpp = false;

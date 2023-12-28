@@ -12,6 +12,7 @@
 #include "GrabComponent.h"
 #include "MoveComponent.h"
 #include "NiagaraComponent.h"
+#include "VRBodyAnimInstance.h"
 #include "VRHandAnimComponent.h"
 #include "Components/CapsuleComponent.h"
 
@@ -89,6 +90,7 @@ void AVR_Player::BeginPlay()
 		}
 	}
 
+	BodyAnim = Cast<UVRBodyAnimInstance>(GetMesh()->GetAnimInstance());
 }
 
 // Called every frame
@@ -103,6 +105,18 @@ void AVR_Player::Tick(float DeltaTime)
 
 	DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Blue, false, 1, 0, 1);
 	**/
+
+	if (BodyAnim != nullptr)
+	{
+		BodyAnim->LeftHandLocation = LeftGrip->GetComponentLocation();
+		BodyAnim->LeftHandRotation = LeftGrip->GetComponentRotation();
+
+		BodyAnim->RightHandLocation = RightGrip->GetComponentLocation();
+		BodyAnim->RightHandRotation = RightGrip->GetComponentRotation();
+
+		BodyAnim->HeadLocation = CameraComponent->GetComponentLocation();
+		BodyAnim->HeadRotation = CameraComponent->GetComponentRotation();
+	}
 }
 
 // Called to bind functionality to input
