@@ -99,6 +99,18 @@ public:
 	UPROPERTY()
 	class UVRBodyAnimInstance* BodyAnim;
 
+	UPROPERTY()
+	UStaticMeshComponent* GazeMeshComponent;
+
+	APlayerController* PC;
+
+	float RecenterTickTimer {0.f};
+
+	UPROPERTY(EditAnywhere)
+	float RecenterHoldAmountSeconds {1.0f};
+
+	bool RecenterTick {false};
+
 private:
 
 	void RightTriggerInput_Bool(const FInputActionValue& Value);
@@ -106,5 +118,10 @@ private:
 	void RightTriggerInput_Touch(const FInputActionValue& Value);
 	void RightThumbStickInput(const FInputActionValue& Value);
 	void MoveActionInput(const FInputActionValue& Value);
+	void RecenterStart(const FInputActionValue& Value);
+	void Recenter(const FInputActionValue& Value);
+	void RecenterInputStop(const FInputActionValue& Value);
+	void PlayerRotate(const FInputActionValue& Value);
+
 	void BasicTeleport(float SightRange, const FVector& Direction, const FVector& Pivot);
 };

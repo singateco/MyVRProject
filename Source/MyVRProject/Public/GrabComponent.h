@@ -21,6 +21,9 @@ public:
 	UPROPERTY()
 	class APickUpActor* CurrentlyGrabbedObject;
 
+	UPROPERTY(EditAnywhere, Category = "MySettings")
+	class UHapticFeedbackEffect_Curve* GrabHaptic;
+
 
 protected:
 	// Called when the game starts

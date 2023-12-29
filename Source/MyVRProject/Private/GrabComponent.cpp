@@ -7,6 +7,7 @@
 #include "PickUpActor.h"
 #include "VR_Player.h"
 #include "Components/TextRenderComponent.h"
+#include "Haptics/HapticFeedbackEffect_Curve.h"
 
 // Sets default values for this component's properties
 UGrabComponent::UGrabComponent()
@@ -131,12 +132,19 @@ void UGrabComponent::GrabObject()
 
 		CurrentlyGrabbedObject = Cast<APickUpActor>(OverlapResults[Idx].GetActor());
 
-		if (CurrentlyGrabbedObject)
+		if (nullptr != CurrentlyGrabbedObject)
 		{
 			CurrentlyGrabbedObject->Grabbed(Player->RightHandMesh, EAttachmentRule::SnapToTarget);
 
 			PrevLocation = Player->RightGrip->GetComponentLocation();
 			PrevQuat = Player->RightGrip->GetComponentQuat();
+
+			// 진동 효과를 준다.
+			if (nullptr != Player->PC && nullptr != GrabHaptic)
+			{
+				Player->PC->PlayHapticEffect(GrabHaptic, EControllerHand::Right, 1, false);
+			}
+
 		}
 		
 		//Player->RightLog->SetText(FText::FromString(ObjectsString));

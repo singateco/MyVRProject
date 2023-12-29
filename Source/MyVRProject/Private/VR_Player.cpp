@@ -27,6 +27,7 @@ AVR_Player::AVR_Player()
 	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand"))),
 	LeftLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Left Log"))),
 	RightLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Right Log"))),
+	GazeMeshComp(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gaze Mesh"))),
 	MoveComp(CreateDefaultSubobject<UMoveComponent>(TEXT("Move Component"))),
 	GrabComp(CreateDefaultSubobject<UGrabComponent>(TEXT("Grab Component"))),
 	HandAnimComp(CreateDefaultSubobject<UVRHandAnimComponent>(TEXT("VR Hand Anim Component"))),
@@ -37,6 +38,7 @@ AVR_Player::AVR_Player()
 
 	CameraComponent->SetupAttachment(RootComponent);
 	HMDMesh->SetupAttachment(CameraComponent);
+	GazeMeshComp->SetupAttachment(CameraComponent);
 
 	LeftGrip->SetupAttachment(RootComponent);
 	LeftHandMesh->SetupAttachment(LeftGrip);
@@ -81,7 +83,9 @@ void AVR_Player::BeginPlay()
 	// 헤드 마운트 디스플레이 장비의 기준 위치를 스테이지로 설정한다.
 	UHeadMountedDisplayFunctionLibrary::SetTrackingOrigin(EHMDTrackingOrigin::Stage);
 
-	if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
+	PC = GetWorld()->GetFirstPlayerController();
+
+	if (nullptr != PC)
 	{
 		UEnhancedInputLocalPlayerSubsystem* Subsys = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer());
 		if (Subsys)
@@ -117,6 +121,12 @@ void AVR_Player::Tick(float DeltaTime)
 		BodyAnim->HeadLocation = CameraComponent->GetComponentLocation();
 		BodyAnim->HeadRotation = CameraComponent->GetComponentRotation();
 	}
+
+	if (RecenterTick)
+	{
+		RecenterTickTimer += DeltaTime;
+	}
+
 }
 
 // Called to bind functionality to input
@@ -136,7 +146,15 @@ void AVR_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		// EnhancedInputComponent->BindAction(RightThumbStick, ETriggerEvent::Triggered, this, &AVR_Player::RightThumbStickInput);
 		// EnhancedInputComponent->BindAction(RightThumbStick, ETriggerEvent::Completed, this, &AVR_Player::RightThumbStickInput);
 		// EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &AVR_Player::MoveActionInput);
+
+		EnhancedInputComponent->BindAction(Ia_Inputs[11], ETriggerEvent::Triggered, this, &AVR_Player::PlayerRotate);
 		
+		// A버튼을 누를때 뷰 재정렬
+		EnhancedInputComponent->BindAction(Ia_Inputs[10], ETriggerEvent::Started, this, &AVR_Player::RecenterStart);
+		EnhancedInputComponent->BindAction(Ia_Inputs[10], ETriggerEvent::Triggered, this, &AVR_Player::Recenter);
+		EnhancedInputComponent->BindAction(Ia_Inputs[10], ETriggerEvent::Completed, this, &AVR_Player::RecenterInputStop);
+		EnhancedInputComponent->BindAction(Ia_Inputs[10], ETriggerEvent::Canceled, this, &AVR_Player::RecenterInputStop);
+
 		// 컴포넌트에 입력 이벤트 넘겨주기
 		MoveComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
 		GrabComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
@@ -198,6 +216,34 @@ void AVR_Player::MoveActionInput(const FInputActionValue& Value)
 	LeftLog->SetText(FText::FromString(FString::Printf(TEXT("X: %.2f\r\nY: %.2f"), Dir.X, Dir.Y)));
 
 	AddMovementInput(WorldDir);
+}
+
+void AVR_Player::RecenterStart(const FInputActionValue& Value)
+{
+	RecenterTick = true;
+}
+
+void AVR_Player::Recenter(const FInputActionValue& Value)
+{
+	// 플레이어 시점 재정렬
+	if (RecenterTickTimer >= RecenterHoldAmountSeconds)
+	{
+		UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition(0, EOrientPositionSelector::OrientationAndPosition);
+		RecenterTickTimer = 0.f;
+	}
+}
+
+void AVR_Player::RecenterInputStop(const FInputActionValue& Value)
+{
+	RecenterTick = false;
+	RecenterTickTimer = 0.f;
+}
+
+void AVR_Player::PlayerRotate(const FInputActionValue& Value)
+{
+	float InputDir = Value.Get<float>();
+
+	AddControllerYawInput(InputDir);
 }
 
 void AVR_Player::BasicTeleport(const float SightRange, const FVector& Direction, const FVector& Pivot)
