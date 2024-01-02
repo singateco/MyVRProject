@@ -99,8 +99,11 @@ public:
 	UPROPERTY()
 	class UVRBodyAnimInstance* BodyAnim;
 
-	UPROPERTY()
-	UStaticMeshComponent* GazeMeshComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
+	UStaticMeshComponent* GazeMeshComp;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
+	class UGazeComponent* GazeComp;
 
 	APlayerController* PC;
 

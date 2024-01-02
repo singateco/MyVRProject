@@ -9,6 +9,7 @@
 #include "Components/TextRenderComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "GazeComponent.h"
 #include "GrabComponent.h"
 #include "MoveComponent.h"
 #include "NiagaraComponent.h"
@@ -27,11 +28,12 @@ AVR_Player::AVR_Player()
 	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand"))),
 	LeftLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Left Log"))),
 	RightLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Right Log"))),
-	GazeMeshComp(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gaze Mesh"))),
 	MoveComp(CreateDefaultSubobject<UMoveComponent>(TEXT("Move Component"))),
 	GrabComp(CreateDefaultSubobject<UGrabComponent>(TEXT("Grab Component"))),
 	HandAnimComp(CreateDefaultSubobject<UVRHandAnimComponent>(TEXT("VR Hand Anim Component"))),
-	TeleportFX(CreateDefaultSubobject<UNiagaraComponent>(TEXT("Teleport FX")))
+	TeleportFX(CreateDefaultSubobject<UNiagaraComponent>(TEXT("Teleport FX"))),
+	GazeMeshComp(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gaze Mesh"))),
+	GazeComp(CreateDefaultSubobject<UGazeComponent>(TEXT("Gaze Component")))
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -39,6 +41,11 @@ AVR_Player::AVR_Player()
 	CameraComponent->SetupAttachment(RootComponent);
 	HMDMesh->SetupAttachment(CameraComponent);
 	GazeMeshComp->SetupAttachment(CameraComponent);
+
+	GazeMeshComp->SetRelativeLocation(FVector(100, 0, 0));
+	GazeMeshComp->SetRelativeRotation(FRotator(0, 180, -90));
+	GazeMeshComp->SetRelativeScale3D(FVector(0.1f));
+	GazeMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	LeftGrip->SetupAttachment(RootComponent);
 	LeftHandMesh->SetupAttachment(LeftGrip);
