@@ -15,7 +15,9 @@
 #include "NiagaraComponent.h"
 #include "VRBodyAnimInstance.h"
 #include "VRHandAnimComponent.h"
+#include "WidgetPointerComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetInteractionComponent.h"
 
 // Sets default values
 AVR_Player::AVR_Player()
@@ -24,8 +26,10 @@ AVR_Player::AVR_Player()
 	HMDMesh(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HMD Mesh"))),
 	LeftGrip(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Left Grip"))),
 	LeftHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Left Hand"))),
+	LeftPointer(CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("Left Widget Pointer"))),
 	RightGrip(CreateDefaultSubobject<UMotionControllerComponent>(TEXT("Right Grip"))),
 	RightHandMesh(CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Right Hand"))),
+	RightPointer(CreateDefaultSubobject<UWidgetInteractionComponent>(TEXT("Right Widget Pointer"))),
 	LeftLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Left Log"))),
 	RightLog(CreateDefaultSubobject<UTextRenderComponent>(TEXT("Right Log"))),
 	MoveComp(CreateDefaultSubobject<UMoveComponent>(TEXT("Move Component"))),
@@ -33,7 +37,8 @@ AVR_Player::AVR_Player()
 	HandAnimComp(CreateDefaultSubobject<UVRHandAnimComponent>(TEXT("VR Hand Anim Component"))),
 	TeleportFX(CreateDefaultSubobject<UNiagaraComponent>(TEXT("Teleport FX"))),
 	GazeMeshComp(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gaze Mesh"))),
-	GazeComp(CreateDefaultSubobject<UGazeComponent>(TEXT("Gaze Component")))
+	GazeComp(CreateDefaultSubobject<UGazeComponent>(TEXT("Gaze Component"))),
+	WidgetPointerComp(CreateDefaultSubobject<UWidgetPointerComponent>(TEXT("Widget Pointer Component")))
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -49,6 +54,7 @@ AVR_Player::AVR_Player()
 
 	LeftGrip->SetupAttachment(RootComponent);
 	LeftHandMesh->SetupAttachment(LeftGrip);
+	LeftPointer->SetupAttachment(LeftHandMesh);
 
 	LeftGrip->SetRelativeLocation(FVector(50, -30, -10));
 	LeftHandMesh->SetRelativeRotation(FRotator(90, -180, -10));
@@ -56,6 +62,7 @@ AVR_Player::AVR_Player()
 
 	RightGrip->SetupAttachment(RootComponent);
 	RightHandMesh->SetupAttachment(RightGrip);
+	RightPointer->SetupAttachment(RightHandMesh);
 
 	RightGrip->SetRelativeLocation(FVector(50, 30, -10));
 	RightHandMesh->SetRelativeRotation(FRotator(90, 0, 10));
@@ -166,6 +173,7 @@ void AVR_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		MoveComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
 		GrabComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
 		HandAnimComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
+		WidgetPointerComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
 	}
 }
 

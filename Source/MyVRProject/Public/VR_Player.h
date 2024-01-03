@@ -46,12 +46,18 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	USkeletalMeshComponent* LeftHandMesh;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
+	class UWidgetInteractionComponent* LeftPointer;
+
 	// 오른쪽 손
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	UMotionControllerComponent* RightGrip;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	USkeletalMeshComponent* RightHandMesh;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
+	UWidgetInteractionComponent* RightPointer;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	UTextRenderComponent* LeftLog;
@@ -104,6 +110,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class UGazeComponent* GazeComp;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
+	class UWidgetPointerComponent* WidgetPointerComp;
 
 	APlayerController* PC;
 
