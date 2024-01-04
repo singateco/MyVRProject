@@ -30,7 +30,7 @@ AKeyboardActor::AKeyboardActor()
 
 void AKeyboardActor::ResetKeyColor()
 {
-	KeyMat->SetVectorParameterValue(FName("EmissiveColor"), FVector4((1.0, 1.0, 1.0, 1.0)));
+	KeyMat->SetVectorParameterValue(FName("EmissiveColor"), FVector4(1.0f, 1.0f, 1.0f, 1.0f));
 	KeyMat->SetScalarParameterValue(FName("Intensity"), 1.f);
 }
 
@@ -58,7 +58,7 @@ void AKeyboardActor::OnHitKey(UPrimitiveComponent* OverlappedComponent, AActor* 
 {
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), KeySound, GetActorLocation(), GetActorRotation());
 
-	KeyMat->SetVectorParameterValue(FName("EmissiveColor"), FVector4((0.276877, 0.958333, 0.297632, 1.000000)));
+	KeyMat->SetVectorParameterValue(FName("EmissiveColor"), FVector4(0.276877, 0.958333, 0.297632, 1.000000));
 	KeyMat->SetScalarParameterValue(FName("Intensity"), 5.f);
 
 	FTimerHandle ResetHandle;

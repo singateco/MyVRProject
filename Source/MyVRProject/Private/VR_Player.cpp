@@ -3,6 +3,7 @@
 
 #include "VR_Player.h"
 
+#include "CarControllerComponent.h"
 #include "MotionControllerComponent.h"
 #include "Camera/CameraComponent.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
@@ -12,12 +13,14 @@
 #include "GazeComponent.h"
 #include "GrabComponent.h"
 #include "MoveComponent.h"
+#include "MyCar.h"
 #include "NiagaraComponent.h"
 #include "VRBodyAnimInstance.h"
 #include "VRHandAnimComponent.h"
 #include "WidgetPointerComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetInteractionComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AVR_Player::AVR_Player()
@@ -38,7 +41,8 @@ AVR_Player::AVR_Player()
 	TeleportFX(CreateDefaultSubobject<UNiagaraComponent>(TEXT("Teleport FX"))),
 	GazeMeshComp(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gaze Mesh"))),
 	GazeComp(CreateDefaultSubobject<UGazeComponent>(TEXT("Gaze Component"))),
-	WidgetPointerComp(CreateDefaultSubobject<UWidgetPointerComponent>(TEXT("Widget Pointer Component")))
+	WidgetPointerComp(CreateDefaultSubobject<UWidgetPointerComponent>(TEXT("Widget Pointer Component"))),
+	CarControllerComponent(CreateDefaultSubobject<UCarControllerComponent>(TEXT("Car Controller Component")))
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -109,6 +113,8 @@ void AVR_Player::BeginPlay()
 	}
 
 	BodyAnim = Cast<UVRBodyAnimInstance>(GetMesh()->GetAnimInstance());
+
+	ControlledCar = Cast<AMyCar>(UGameplayStatics::GetActorOfClass(GetWorld(), AMyCar::StaticClass()));
 }
 
 // Called every frame
@@ -139,6 +145,11 @@ void AVR_Player::Tick(float DeltaTime)
 	if (RecenterTick)
 	{
 		RecenterTickTimer += DeltaTime;
+	}
+
+	if (ControlledCar)
+	{
+		ControlledCar->RotateCar(1);
 	}
 
 }
@@ -174,6 +185,7 @@ void AVR_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		GrabComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
 		HandAnimComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
 		WidgetPointerComp->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
+		CarControllerComponent->SetupPlayerInputComponent(EnhancedInputComponent, Ia_Inputs);
 	}
 }
 

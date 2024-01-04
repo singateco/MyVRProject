@@ -114,6 +114,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
 	class UWidgetPointerComponent* WidgetPointerComp;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Components")
+	class UCarControllerComponent* CarControllerComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "MySettings|Variables")
+	class AMyCar* ControlledCar;
+
 	APlayerController* PC;
 
 	float RecenterTickTimer {0.f};
